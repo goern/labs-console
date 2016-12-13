@@ -1,6 +1,6 @@
 # labs-console
 
-A web interface to drive push button infrastructure. Built with [patternfly](https://github.com/patternfly/patternfly) and [react-static-boilerplate](https://github.com/kriasoft/react-static-boilerplate). 
+A web interface to drive push button infrastructure. Built with [patternfly](https://github.com/patternfly/patternfly) and [react-static-boilerplate](https://github.com/kriasoft/react-static-boilerplate).
 
 ### Directory Layout
 
