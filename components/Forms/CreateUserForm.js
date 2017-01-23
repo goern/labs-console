@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import EmptyState from '../EmptyState/EmptyState';
+import labsApi from '../../data/index';
 
 class CreateUserForm extends React.Component {
 
@@ -12,7 +12,25 @@ class CreateUserForm extends React.Component {
   };
 
   handleSubmit = (event) => {
-    this.props.handleSubmit(event, this.state.newUser);
+    event.preventDefault();
+    let userApi = new labsApi.UserApi();
+    let user = new labsApi.User();
+    Object.assign(user, this.state.newUser);
+    if(user.id){
+      //edit mode
+      userApi.updateUser(user.id, {'body': user}, (e) => {
+        //todo: display an error
+        if (e) console.error(e);
+        this.props.handleSubmit(event, user);
+      });
+    } else {
+      //create mode
+      userApi.addUser({'body': user}, (e) => {
+        //todo: display an error
+        if (e) console.error(e);
+        this.props.handleSubmit(event, user);
+      });
+    }
   };
 
   handleCancel = (event) => {
@@ -31,8 +49,9 @@ class CreateUserForm extends React.Component {
 
   render() {
     return (
-      <EmptyState title={ Object.keys(this.props.value).length === 0 ? 'Create User' : 'Edit User'}>
         <form className="form-horizontal" role="form">
+          <h2>{Object.keys(this.props.value).length === 0 ? 'Create User' : 'Edit User'}</h2>
+          <hr/>
           <div className="form-group">
             <label htmlFor="firstname" className="col-sm-2 control-label required-pf">First Name</label>
             <div className="col-sm-10">
@@ -76,18 +95,17 @@ class CreateUserForm extends React.Component {
           <div className="form-group">
             <label htmlFor="sshkey" className="col-sm-2 control-label">SSH Public Key</label>
             <div className="col-sm-10">
-              <textarea className="form-control" id="sshkey" placeholder="paste your ssh key here..." rows="2"
+              <textarea className="form-control" id="sshkey" placeholder="paste your ssh key here..." rows="6"
                         value={this.state.newUser.ssh_public_key}
                         onChange={(e) => { this.handleChange(e,'ssh_public_key')}}/>
             </div>
           </div>
-          <div className="form-group">
+          <div className="form-group text-center">
             <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Save</button>
             &nbsp;&nbsp;
             <button type="submit" className="btn btn-default" onClick={this.handleCancel}>Cancel</button>
           </div>
         </form>
-      </EmptyState>
     )
   }
 }
