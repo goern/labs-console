@@ -122,7 +122,6 @@ tasks.set('start', function () {
   global.HMR = !(process.argv.indexOf('--no-hmr') >= 0); // Hot Module Replacement (HMR)
   return run('clean').then(function () {
     return new Promise(function (resolve) {
-      var bs = require('browser-sync').create();
       var webpackConfig = require('./webpack.config');
       var compiler = webpack(webpackConfig);
       // Node.js middleware that compiles application in watch mode with HMR support
@@ -142,8 +141,10 @@ tasks.set('start', function () {
         fs.writeFileSync('./public/index.html', output, 'utf8');
 
         // Launch Browsersync after the initial bundling is complete
+        // and dont launch it in a PROD environment
         // For more information visit https://browsersync.io/docs/options
-        if (++count === 1) {
+        if (++count === 1) && !(process.env.NODE_ENV === "production") {
+          var bs = require('browser-sync').create();
           bs.init({
             port: process.env.PORT || 3000,
             ui: { port: Number(process.env.PORT || 3000) + 1 },
@@ -152,7 +153,7 @@ tasks.set('start', function () {
               middleware: [webpackDevMiddleware, require('webpack-hot-middleware')(compiler), require('connect-history-api-fallback')()]
             }
           }, resolve);
-        }
+        } // if
       });
     });
   });
