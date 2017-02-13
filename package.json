@@ -119,7 +119,7 @@
     "eslint": "eslint components core pages test utils main.js run.js webpack.config.js",
     "stylelint": "stylelint \"components/**/*.css\" \"pages/**/*.css\"",
     "lint": "npm run eslint && npm run stylelint",
-    "test": "jest",
+    "test-off": "jest",
     "test:watch": "npm test -- --watch",
     "test:cov": "npm test -- --coverage",
     "clean": "node run clean",
@@ -128,6 +128,6 @@
     "publish": "node run publish",
     "publish:debug": "node run publish --debug",
     "start": "node server.js",
-    "postinstall": "node run build"
+    "postinstall-off": "node run build"
   }
 }
